@@ -42,25 +42,6 @@ namespace zadanie_rozmyte
             else return false;
 
         }
-
-        private double[] FindElement(string name)
-        {
-            List<double> fuzzyNumber = new List<double>();
-            //double[] fuzzyNumber = new double[4];
-            foreach (string s in readText)
-            {
-                string[] sArr = s.Split('|');
-                if (sArr[1] == name)
-                {
-                    string[] numbers = sArr[0].Split(';');
-                    foreach (string n in numbers) fuzzyNumber.Add(Double.Parse(n));                        
-                    return fuzzyNumber.ToArray();
-                };
-
-            }
-            return fuzzyNumber.ToArray();
-            
-        }
         public Liczby()
         {
             InitializeComponent();
@@ -109,8 +90,8 @@ namespace zadanie_rozmyte
                 {
                     string result = "(";
 
-                    double[] numbers1 = FindElement(numbers[0]);
-                    double[] numbers2 = FindElement(numbers[1]);
+                    double[] numbers1 = Fuzzy.FindElement(numbers[0], fuzzy_numbers);
+                    double[] numbers2 = Fuzzy.FindElement(numbers[1], fuzzy_numbers);
 
                     for (int i = 0; i < 4; i++)
                     {
