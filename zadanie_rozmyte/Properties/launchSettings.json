@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "zadanie_rozmyte": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}

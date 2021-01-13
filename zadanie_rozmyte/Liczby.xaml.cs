@@ -24,6 +24,7 @@ namespace zadanie_rozmyte
     public partial class Liczby : Window
     {
         string[] readText;
+        List<Fuzzy> fuzzy_numbers = new List<Fuzzy>();
         private bool CheckNumbers(string name1, string name2)
         {
             int i = 2;
@@ -63,27 +64,23 @@ namespace zadanie_rozmyte
         public Liczby()
         {
             InitializeComponent();
+            readText = File.ReadAllLines("fuzzy.txt");
+            
+            foreach (string n in readText) fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0]));
 
-            string line = "";
-            using (StreamReader sr = new StreamReader("fuzzy.txt"))
+            StackPanel myStackPanel = new StackPanel();
+            myStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
+            myStackPanel.VerticalAlignment = VerticalAlignment.Top;
+            
+            foreach(Fuzzy n in fuzzy_numbers)
             {
-                StackPanel myStackPanel = new StackPanel();
-                myStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
-                myStackPanel.VerticalAlignment = VerticalAlignment.Top;
-
-                while ((line = sr.ReadLine()) != null)
-                {
-                    TextBlock myTextBlock = new TextBlock();
-                    myTextBlock.Text = $"{line.Split("|")[1]}:({line.Split("|")[0]})";
-                    myTextBlock.FontSize = 22;
-                    myStackPanel.Children.Add(myTextBlock);
-                }
-
-
-                viewer.Content = myStackPanel;
+                TextBlock myTextBlock = new TextBlock();
+                myTextBlock.Text = $"{n.Name}:({n.Number})";
+                myTextBlock.FontSize = 22;
+                myStackPanel.Children.Add(myTextBlock);
             }
 
-            readText = File.ReadAllLines("fuzzy.txt");
+            viewer.Content = myStackPanel;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
