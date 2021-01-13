@@ -1,0 +1,17 @@
+﻿<Window x:Class="zadanie_rozmyte.Liczby"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:zadanie_rozmyte"
+        mc:Ignorable="d"
+        Title="Liczby" Height="450" Width="450">
+    <Grid>
+        <ScrollViewer x:Name="viewer" Margin="0,53,0,247" />
+        <TextBlock HorizontalAlignment="Center" Height="40" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" FontSize="36"><Run Language="pl-pl" Text="NAZWA"/><Run Text=" : "/><Run Language="pl-pl" Text="LICZBA"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Height="31" Margin="10,228,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="18"><Run Language="pl-pl" Text="Wpisz działanie:"/></TextBlock>
+        <TextBox x:Name="dzialanie1" HorizontalAlignment="Center" Height="30" Margin="0,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" />
+        <TextBlock x:Name="errors2" HorizontalAlignment="Center" Height="31" Margin="0,341,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
+        <Button Content="Wykonaj" HorizontalAlignment="Center" Height="42" Margin="0,294,0,0" VerticalAlignment="Top" Width="430" Click="Button_Click" FontSize="20"/>
+    </Grid>
+</Window>
