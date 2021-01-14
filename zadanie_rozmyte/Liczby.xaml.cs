@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using Spire.Xls;
 
 namespace zadanie_rozmyte
 {
@@ -40,6 +41,23 @@ namespace zadanie_rozmyte
 
             return j;
 
+        }
+
+        private void SaveToExcel(List<double> ups, List<double> Ypoints)
+        {
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "fuzzy numbers";
+            sheet.Range["A1"].Text = "x";
+            sheet.Range["B1"].Text = "y";
+
+            for (int i = 0; i < ups.Count; i++)
+            {
+                sheet.Range["A" + (i + 2)].NumberValue = ups.ElementAt(i);
+                sheet.Range["B" + (i + 2)].NumberValue = Ypoints.ElementAt(i);
+            }
+
+            workbook.SaveToFile("fuzzynumbers.xlsx", ExcelVersion.Version2016);
         }
         public Liczby()
         {
@@ -148,9 +166,11 @@ namespace zadanie_rozmyte
                     y.Reverse();
                     Ypoints.AddRange(y);
 
+                    SaveToExcel(ups, Ypoints);
+
                     errors2.Text = "X: " + String.Join(" ", ups);
                     errors3.Text = "Y: " + String.Join(" ", Ypoints);
-                    
+
                     break;
                 case '/':
                     List<double> ups2 = new List<double>();
@@ -176,8 +196,11 @@ namespace zadanie_rozmyte
                     y2.Reverse();
                     Ypoints2.AddRange(y2);
 
+                    SaveToExcel(ups2, Ypoints2);
+
                     errors2.Text = "X: " + String.Join(" ", ups2);
                     errors3.Text = "Y: " + String.Join(" ", Ypoints2);
+
                     break;
                 default:
                     Console.WriteLine("Default case");

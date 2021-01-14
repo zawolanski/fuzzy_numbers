@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Spire.XLS" Version="10.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Liczby.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
