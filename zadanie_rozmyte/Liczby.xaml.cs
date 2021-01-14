@@ -33,7 +33,8 @@ namespace zadanie_rozmyte
             for(int i = 0; i < fuzzy_numbers.Count; i++)
             {
                 string name = fuzzy_numbers[i].Name;
-                if (name == n1 || name == n2) j--;
+                if (name == n1.Trim() && name == n2.Trim()) return 0;
+                if (name == n1.Trim() || name == n2.Trim()) j--;
                 if (j == 0) return j;
             }
 
@@ -67,8 +68,6 @@ namespace zadanie_rozmyte
             string operation = dzialanie1.Text;
             string[] inputNumbers = operation.Split('+', '-', '/', '*');
 
-
-
             if (inputNumbers.Length > 2)
             {
                 errors2.Text = "Możliwe jest tylko jedno działanie do wykonanie!";
@@ -81,7 +80,7 @@ namespace zadanie_rozmyte
                 return;
             }
 
-            if (inputNumbers[0] == inputNumbers[1])
+            if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)
             {
                 errors2.Text = "Liczby nie mogą być takie same!";
                 return;
@@ -106,6 +105,7 @@ namespace zadanie_rozmyte
             //znajdowanie operatora
             int pos = typ == 1 ? inputNumbers[0].Length + 2 : inputNumbers[0].Length;
             char operat = operation[pos];
+            double discretization = 10;
 
             string result = "(";
             switch (operat)
@@ -125,18 +125,59 @@ namespace zadanie_rozmyte
                     }
                     break;
                 case '*':
-                    for (int i = 0; i < 4; i++)
+                    List<double> ups = new List<double>();
+                    List<double> downs= new List<double>();
+                    List<double> y = new List<double>();
+
+                    double m = 1 / discretization;
+                    for (int d = 0; d <= discretization; d++)
                     {
-                        result += (numbers1[i] * numbers2[i]).ToString();
-                        if (i < 3) result += ";";
+                        double k = Math.Round(m * d, 5);
+                        double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) * (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
+                        double down = Math.Round((k * (numbers1[3] - numbers1[2]) + numbers1[2]) * (k * (numbers2[3] - numbers2[2]) + numbers2[2]), 2);
+
+                        ups.Add(up);
+                        downs.Add(down);
+                        y.Add(k);
                     }
+
+                    ups.AddRange(downs);
+
+                    List<double> Ypoints = new List<double>();
+                    Ypoints.AddRange(y);
+                    y.Reverse();
+                    Ypoints.AddRange(y);
+
+                    errors2.Text = "X: " + String.Join(" ", ups);
+                    errors3.Text = "Y: " + String.Join(" ", Ypoints);
+                    
                     break;
                 case '/':
-                    for (int i = 0; i < 4; i++)
+                    List<double> ups2 = new List<double>();
+                    List<double> downs2 = new List<double>();
+                    List<double> y2 = new List<double>();
+
+                    double m2 = 1 / discretization;
+                    for (int d = 0; d <= discretization; d++)
                     {
-                        result += (numbers1[i] / numbers2[i]).ToString();
-                        if (i < 3) result += ";";
+                        double k = Math.Round(m2 * d, 5);
+                        double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) / (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
+                        double down = Math.Round((k * (numbers1[3] - numbers1[2]) + numbers1[2]) / (k * (numbers2[3] - numbers2[2]) + numbers2[2]), 2);
+
+                        ups2.Add(up);
+                        downs2.Add(down);
+                        y2.Add(k);
                     }
+
+                    ups2.AddRange(downs2);
+
+                    List<double> Ypoints2 = new List<double>();
+                    Ypoints2.AddRange(y2);
+                    y2.Reverse();
+                    Ypoints2.AddRange(y2);
+
+                    errors2.Text = "X: " + String.Join(" ", ups2);
+                    errors3.Text = "Y: " + String.Join(" ", Ypoints2);
                     break;
                 default:
                     Console.WriteLine("Default case");
@@ -144,6 +185,35 @@ namespace zadanie_rozmyte
             }
             result += ")";
             dzialanie1.Text = result;
+        }
+
+        private void Button_Click2(object sender, RoutedEventArgs e)
+        {
+            string nameOfSetVar = nameOfSet.Text.Trim();
+            double argumentVar = Double.Parse(argument.Text.Trim());
+            
+
+            int typ = CheckNumbers(nameOfSetVar, nameOfSetVar);
+            if (typ != 0)
+            {
+                errors3.Text = "Brak liczby o podanej nazwie!";
+                return;
+            }
+
+            double[] number = Fuzzy.FindElement(nameOfSetVar, fuzzy_numbers);
+
+            if(argumentVar <= number[0] || argumentVar > number[3]) errors3.Text = "Wartość przynależności wynosi wynosi: 0";
+            else if(argumentVar > number[1] && argumentVar <= number[2]) errors3.Text = "Wartość przynależności wynosi wynosi: 1";
+            else if (argumentVar > number[0] && argumentVar <= number[1])
+            {
+                double result = (argumentVar - number[0])/(number[1] - number[0]);
+                errors3.Text = $"Wartość przynależności wynosi wynosi: {result}";
+            }
+            else if (argumentVar > number[2] && argumentVar <= number[3])
+            {
+                double result = (number[3] - argumentVar) / (number[3] - number[2]);
+                errors3.Text = $"Wartość przynależności wynosi wynosi: {result}";
+            }
         }
     }
 }
