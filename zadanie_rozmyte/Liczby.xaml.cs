@@ -25,21 +25,19 @@ namespace zadanie_rozmyte
     {
         string[] readText;
         List<Fuzzy> fuzzy_numbers = new List<Fuzzy>();
-        private bool CheckNumbers(string name1, string name2)
+        Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        //jeśli zwróci 0 to obie liczby były zmiennymi, a jeśli 1 to tylko druga liczba była zmienną
+        private int CheckNumbers(string n1, string n2)
         {
-            int i = 2;
-            using (StreamReader sr = new StreamReader("fuzzy.txt"))
+            int j = 2;
+            for(int i = 0; i < fuzzy_numbers.Count; i++)
             {
-                string line = "";
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (line.Split("|")[1] == name1 || line.Split("|")[1] == name2) i--;
-                    if (i == 0) return true;
-                }
+                string name = fuzzy_numbers[i].Name;
+                if (name == n1 || name == n2) j--;
+                if (j == 0) return j;
             }
 
-            if (i == 0) return true;
-            else return false;
+            return j;
 
         }
         public Liczby()
@@ -66,47 +64,86 @@ namespace zadanie_rozmyte
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string dzialanie = dzialanie1.Text;
-            string[] numbers = dzialanie.Split('+', '-', '/', '*');
+            string operation = dzialanie1.Text;
+            string[] inputNumbers = operation.Split('+', '-', '/', '*');
 
-            /*if (numbers.Length > 2)
+
+
+            if (inputNumbers.Length > 2)
             {
                 errors2.Text = "Możliwe jest tylko jedno działanie do wykonanie!";
                 return;
             }
-            if (numbers[0] == numbers[1])
+
+            if (inputNumbers.Length < 2 || inputNumbers[1] == "")
+            {
+                errors2.Text = "Brak działania!";
+                return;
+            }
+
+            if (inputNumbers[0] == inputNumbers[1])
             {
                 errors2.Text = "Liczby nie mogą być takie same!";
                 return;
-            }*/
-            
-            /*string dupa = "";
-            foreach (double n in numbers1) dupa += n;
-            errors2.Text = dupa;*/
+            }
 
-            if (dzialanie.Split('+').Length == 2)
+            int typ = CheckNumbers(inputNumbers[0], inputNumbers[1]);
+
+            if (typ == 1)
             {
-                if (CheckNumbers(numbers[0], numbers[1]))
+                inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
+                MatchCollection matchedNumber1 = rx.Matches(inputNumbers[0]);
+                if (matchedNumber1.Count == 0)
                 {
-                    string result = "(";
+                    errors2.Text = "Błędny format liczby!";
+                    return;
+                };
+            }
 
-                    double[] numbers1 = Fuzzy.FindElement(numbers[0], fuzzy_numbers);
-                    double[] numbers2 = Fuzzy.FindElement(numbers[1], fuzzy_numbers);
+            double[] numbers1 = typ == 1 ? Fuzzy.TransformToDouble(inputNumbers[0].Split(";")) : Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
+            double[] numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
 
+            //znajdowanie operatora
+            int pos = typ == 1 ? inputNumbers[0].Length + 2 : inputNumbers[0].Length;
+            char operat = operation[pos];
+
+            string result = "(";
+            switch (operat)
+            {
+                case '+':
                     for (int i = 0; i < 4; i++)
                     {
                         result += (numbers1[i] + numbers2[i]).ToString();
                         if (i < 3) result += ";";
                     }
-
-                    result += ")";
-
-                    dzialanie1.Text = result;
-                }
-                else errors2.Text = "Błędne działanie!";
+                    break;
+                case '-':
+                    for (int i = 0; i < 4; i++)
+                    {
+                        result += (numbers1[i] - numbers2[i]).ToString();
+                        if (i < 3) result += ";";
+                    }
+                    break;
+                case '*':
+                    for (int i = 0; i < 4; i++)
+                    {
+                        result += (numbers1[i] * numbers2[i]).ToString();
+                        if (i < 3) result += ";";
+                    }
+                    break;
+                case '/':
+                    for (int i = 0; i < 4; i++)
+                    {
+                        result += (numbers1[i] / numbers2[i]).ToString();
+                        if (i < 3) result += ";";
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Default case");
+                    break;
             }
-
-
+            result += ")";
+            dzialanie1.Text = result;
         }
     }
 }

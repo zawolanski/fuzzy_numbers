@@ -21,6 +21,13 @@ namespace zadanie_rozmyte
             }
             return fuzzyNumbers.ToArray();
         }
+
+        public static double[] TransformToDouble(string[] numbers)
+        {
+            List<double> m = new List<double>();
+            foreach (string n in numbers) m.Add(Double.Parse(n));
+            return m.ToArray();
+        }
         public string Name { get; set; }
         public string Number { get; set; }
 
