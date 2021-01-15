@@ -59,6 +59,28 @@ namespace zadanie_rozmyte
 
             workbook.SaveToFile("fuzzynumbers.xlsx", ExcelVersion.Version2016);
         }
+
+        private bool ValidateNumbers(string[] inputNumbers)
+        {
+            if (inputNumbers.Length > 2)
+            {
+                errors2.Text = "Możliwe jest tylko jedno działanie do wykonanie!";
+                return false;
+            }
+
+            if (inputNumbers.Length < 2 || inputNumbers[1] == "")
+            {
+                errors2.Text = "Brak działania!";
+                return false;
+            }
+
+            /*if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)
+            {
+                errors2.Text = "Liczby nie mogą być takie same!";
+                return false;
+            }*/
+            return true;
+        }
         public Liczby()
         {
             InitializeComponent();
@@ -86,45 +108,57 @@ namespace zadanie_rozmyte
             string operation = dzialanie1.Text;
             string[] inputNumbers = operation.Split('+', '-', '/', '*');
 
-            if (inputNumbers.Length > 2)
-            {
-                errors2.Text = "Możliwe jest tylko jedno działanie do wykonanie!";
-                return;
-            }
-
-            if (inputNumbers.Length < 2 || inputNumbers[1] == "")
-            {
-                errors2.Text = "Brak działania!";
-                return;
-            }
-
-            if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)
-            {
-                errors2.Text = "Liczby nie mogą być takie same!";
-                return;
-            }
+            bool isValidNumbers = ValidateNumbers(inputNumbers);
+            if(isValidNumbers == false) return;
 
             int typ = CheckNumbers(inputNumbers[0], inputNumbers[1]);
 
-            if (typ == 1)
-            {
+            double[] numbers1;
+            double[] numbers2;
+            //(2;4;6;7)+(2;4;6;7)
+
+            int pos;
+
+            if (typ == 0) {
+                numbers1 = Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
+                numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
+                pos = inputNumbers[0].Length;
+            } else if (typ == 1) {
+                bool isFuzzyNumber = Fuzzy.IsFuzzyNumber(inputNumbers[0]);
                 inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
-                MatchCollection matchedNumber1 = rx.Matches(inputNumbers[0]);
+                if (isFuzzyNumber == false)
+                {
+                    errors2.Text = "Błędny format liczby!";
+                    return;
+                };
+                numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
+                numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
+                pos = inputNumbers[0].Length + 2;
+            } else { 
+                inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
+                inputNumbers[1] = inputNumbers[1].Replace("(", "").Replace(")", "");
+
+                MatchCollection matchedNumber1 = rx.Matches(inputNumbers[1]);
                 if (matchedNumber1.Count == 0)
                 {
                     errors2.Text = "Błędny format liczby!";
                     return;
                 };
+                
+                numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
+                numbers2 = Fuzzy.TransformToDouble(inputNumbers[1].Split(";"));
+                pos = inputNumbers[0].Length + 2;
             }
 
-            double[] numbers1 = typ == 1 ? Fuzzy.TransformToDouble(inputNumbers[0].Split(";")) : Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
-            double[] numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
-
             //znajdowanie operatora
-            int pos = typ == 1 ? inputNumbers[0].Length + 2 : inputNumbers[0].Length;
             char operat = operation[pos];
-            double discretization = 10;
+            errors3.Text = operat.ToString();
+            double num;
+            double discretizationValue = 1.0;
+            if (Double.TryParse(discretization.Text, out num)) discretizationValue = num;
 
+            
+            errors2.Text = "";
             string result = "(";
             switch (operat)
             {
@@ -144,11 +178,11 @@ namespace zadanie_rozmyte
                     break;
                 case '*':
                     List<double> ups = new List<double>();
-                    List<double> downs= new List<double>();
+                    List<double> downs = new List<double>();
                     List<double> y = new List<double>();
 
-                    double m = 1 / discretization;
-                    for (int d = 0; d <= discretization; d++)
+                    double m = 1 / discretizationValue;
+                    for (int d = 0; d <= discretizationValue; d++)
                     {
                         double k = Math.Round(m * d, 5);
                         double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) * (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
@@ -177,8 +211,8 @@ namespace zadanie_rozmyte
                     List<double> downs2 = new List<double>();
                     List<double> y2 = new List<double>();
 
-                    double m2 = 1 / discretization;
-                    for (int d = 0; d <= discretization; d++)
+                    double m2 = 1 / discretizationValue;
+                    for (int d = 0; d <= discretizationValue; d++)
                     {
                         double k = Math.Round(m2 * d, 5);
                         double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) / (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
@@ -208,6 +242,7 @@ namespace zadanie_rozmyte
             }
             result += ")";
             dzialanie1.Text = result;
+            
         }
 
         private void Button_Click2(object sender, RoutedEventArgs e)
