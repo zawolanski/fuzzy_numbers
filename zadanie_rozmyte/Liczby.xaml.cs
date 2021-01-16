@@ -168,7 +168,6 @@ namespace zadanie_rozmyte
             //znajdowanie operatora
             int pos = inputNumbers[0].Length;
             char operat = operationValue[pos];
-            errors3.Text = operat.ToString();
             //(2;4;6;7)+(2;4;6;7)
 
 
@@ -283,17 +282,16 @@ namespace zadanie_rozmyte
                         y2.Add(k);
                     }
 
-                    ups2.AddRange(downs2);
 
+                    result += $"{ups2[0]};{ups2.Last()};{downs2[0]};{downs2.Last()}";
+
+                    ups2.AddRange(downs2);
                     List<double> Ypoints2 = new List<double>();
                     Ypoints2.AddRange(y2);
                     y2.Reverse();
                     Ypoints2.AddRange(y2);
 
                     SaveToExcel(ups2, Ypoints2);
-
-                    errors2.Text = "X: " + String.Join(" ", ups2);
-                    errors3.Text = "Y: " + String.Join(" ", Ypoints2);
 
                     break;
                 default:
