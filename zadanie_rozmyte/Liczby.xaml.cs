@@ -31,7 +31,7 @@ namespace zadanie_rozmyte
         private int CheckNumbers(string n1, string n2)
         {
             int j = 2;
-            for(int i = 0; i < fuzzy_numbers.Count; i++)
+            for (int i = 0; i < fuzzy_numbers.Count; i++)
             {
                 string name = fuzzy_numbers[i].Name;
                 if (name == n1.Trim() && name == n2.Trim()) return 0;
@@ -124,7 +124,7 @@ namespace zadanie_rozmyte
             myGrid.Children.Add(titleNameTextBlock);
             myGrid.Children.Add(titleNumberTextBlock);
 
-            for (int i = 0; i < fuzzy_numbers.Count; i++){
+            for (int i = 0; i < fuzzy_numbers.Count; i++) {
                 TextBlock nameTextBlock = new TextBlock();
                 TextBlock numberTextBlock = new TextBlock();
 
@@ -155,67 +155,30 @@ namespace zadanie_rozmyte
             string[] inputNumbers = operationValue.Split('+', '-', '/', '*');
 
             bool isValidNumbers = ValidateNumbers(inputNumbers);
-            if(isValidNumbers == false) return;
+            if (isValidNumbers == false) return;
 
             //przypisywanie wartości dyskretyzacji
             double discretizationValue = 1.0;
             double num;
             if (Double.TryParse(discretization.Text, out num)) discretizationValue = num;
 
-            double[] numbers1 = new double[(Int32.Parse(discretizationValue.ToString()) + 3)];
-            double[] numbers2 = new double[(Int32.Parse(discretizationValue.ToString()) + 3)];
+            double[] numbers1;
+            double[] numbers2;
 
             //znajdowanie operatora
             int pos = inputNumbers[0].Length;
             char operat = operationValue[pos];
             //(2;4;6;7)+(2;4;6;7)
+            PassedNumber n1 = new PassedNumber(inputNumbers[0]);
+            PassedNumber n2 = new PassedNumber(inputNumbers[1]);
 
+            numbers1 = n1.CheckNumber(fuzzy_numbers);
+            numbers2 = n2.CheckNumber(fuzzy_numbers);
 
-            inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
-            inputNumbers[1] = inputNumbers[1].Replace("(", "").Replace(")", "");
-            MatchCollection matchedNumber1 = rx.Matches(inputNumbers[0]);
-            MatchCollection matchedNumber2 = rx.Matches(inputNumbers[1]);
-
-            if (matchedNumber1.Count == 1) numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
-            else
+            if (numbers1.Length == 0 || numbers2.Length == 0)
             {
-                int k = 1;
-                for (int i = 0; i < fuzzy_numbers.Count; i++)
-                {
-                    string name = fuzzy_numbers[i].Name;
-                    if (name == inputNumbers[0])
-                    {
-                        numbers1 = Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
-                        k--;
-                        break;
-                    }
-                }
-                if(k == 1)
-                {
-                    errors2.Text = "Błędny format liczby!";
-                    return;
-                }
-            }
-
-            if (matchedNumber2.Count == 1) numbers2 = Fuzzy.TransformToDouble(inputNumbers[1].Split(";"));
-            else
-            {
-                int k = 1;
-                for (int i = 0; i < fuzzy_numbers.Count; i++)
-                {
-                    string name = fuzzy_numbers[i].Name;
-                    if (name == inputNumbers[1])
-                    {
-                        numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
-                        k--;
-                        break;
-                    }
-                }
-                if (k == 1)
-                {
-                    errors2.Text = "Błędny format liczby!";
-                    return;
-                }
+                errors2.Text = "Podane wartości są nieprawidłowe!";
+                return;
             }
 
             errors2.Text = "";
@@ -295,7 +258,7 @@ namespace zadanie_rozmyte
 
                     break;
                 default:
-                    Console.WriteLine("Default case");
+                    Console.WriteLine("Error");
                     break;
             }
             result += ")";

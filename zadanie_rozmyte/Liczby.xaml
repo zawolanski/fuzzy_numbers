@@ -12,7 +12,7 @@
             <ColumnDefinition Width="2" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <ScrollViewer x:Name="viewer" HorizontalAlignment="Left" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="440" Margin="10,10,0,351" Foreground="White"  >
+        <ScrollViewer x:Name="viewer" HorizontalAlignment="Left" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="440" Margin="10,10,0,10" Foreground="White"  >
             <ScrollViewer.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1"/>
@@ -30,7 +30,7 @@
                 <TextBlock Height="40" TextWrapping="Wrap" Width="400" FontSize="30" Margin="0,30,0,15" TextAlignment="Center" Foreground="White"><Run Language="pl-pl" Text="Dyskretyzacja"/><Run Text=":"/></TextBlock>
                 <TextBox x:Name="discretization" Height="50"  TextWrapping="Wrap" Width="100" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" Text="1" />
                 <Button Content="Wykonaj" Height="50" Width="250" Click="Button_Click" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
-                <TextBlock x:Name="errors2" Height="55" TextWrapping="Wrap" Width="400" Text="DUAP DUAP DUAP DUPA DUPA DUAP DUAP DUPA DUPA" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
+                <TextBlock x:Name="errors2" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Height="2" Background="#FF404040" />
             <StackPanel Height="329">
@@ -46,7 +46,7 @@
                     <TextBox x:Name="argument" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
                 </WrapPanel>
                 <Button Content="Oblicz przynależność" Height="50" Width="250" Click="Button_Click2" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
-                <TextBlock x:Name="errors3" Height="55" TextWrapping="Wrap" Width="400" Text="DUAP DUAP DUAP DUPA DUPA DUAP DUAP DUPA DUPA" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold"/>
+                <TextBlock x:Name="errors3" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold"/>
             </StackPanel>
         </StackPanel>
     </Grid>

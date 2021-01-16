@@ -5,15 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zadanie_rozmyte"
         mc:Ignorable="d"
-        Title="MainWindow" Height="300" Width="450">
+        Title="MainWindow" Height="482" Width="450" Background="#FF151515">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"  Height="25" Width="226" FontSize="18"><Run Language="pl-pl" Text="Dodaj nową liczbę rozmytą:"/></TextBlock>
-        <TextBox x:Name="number1" HorizontalAlignment="Left" Margin="57,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="18"/>
-        <TextBox x:Name="number_name" HorizontalAlignment="Left" Margin="57,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="18"/>
-        <Button Content="Dodaj" HorizontalAlignment="Left" Height="37" Margin="10,89,0,0" VerticalAlignment="Top" Width="167" FontSize="20" Click="Button_Click"/>
-        <TextBlock HorizontalAlignment="Left" Height="17" Margin="11,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" ><Run Language="pl-pl" Text="Liczba:"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Height="17" Margin="10,63,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" ><Run Language="pl-pl" Text="Nazwa"/><Run Text=":"/></TextBlock>
-        <Button Content="Wyświetl liczby" HorizontalAlignment="Left" Height="37" Margin="11,195,0,0" VerticalAlignment="Top" Width="167" FontSize="20" Click="Button_Click_1"/>
-        <TextBlock x:Name="errors" HorizontalAlignment="Left" Height="19" Margin="11,131,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180"/>
+        <StackPanel>
+            <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,30,0,15" Foreground="White"><Run Language="pl-pl" Text="Dodaj nową liczbę rozmytą:"/></TextBlock>
+            <WrapPanel Height="30" HorizontalAlignment="Center" Margin="0,15,0,15">
+                <TextBlock Height="30" TextWrapping="Wrap" Width="170" FontSize="20" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" ><Run Language="pl-pl" Text="Liczba:"/></TextBlock>
+                <TextBox x:Name="number1" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
+            </WrapPanel>
+            <WrapPanel Height="30" HorizontalAlignment="Center" Margin="0,15,0,15">
+                <TextBlock Height="30" TextWrapping="Wrap" Width="170" FontSize="20" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" ><Run Language="pl-pl" Text="Nazwa:"/></TextBlock>
+                <TextBox x:Name="number_name" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
+            </WrapPanel>
+            <Button Content="Dodaj" Height="50" Width="250" Click="Button_Click" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
+            <TextBlock x:Name="errors" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
+            <Button Content="Wyświetl liczby" Height="50" Width="250" Click="Button_Click_1" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
+        </StackPanel>
     </Grid>
 </Window>
