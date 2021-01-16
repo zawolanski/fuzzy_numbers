@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,6 +8,12 @@ namespace zadanie_rozmyte
 {
     class Fuzzy
     {
+        public static bool IsElementExist(string name)
+        {
+            string[] readText = File.ReadAllLines("fuzzy.txt");
+            foreach (string f in readText) if (f.Split("|")[1] == name) return true;
+            return false;
+        }
         public static double[] FindElement(string name, List<Fuzzy> fuzzy_numbers)
         {
             List<double> fuzzyNumbers = new List<double>();
@@ -42,7 +49,6 @@ namespace zadanie_rozmyte
             {
                 return false;
             }
-
         }
         public string Name { get; set; }
         public string Number { get; set; }

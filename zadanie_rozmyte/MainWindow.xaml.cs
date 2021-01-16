@@ -27,10 +27,22 @@ namespace zadanie_rozmyte
         {
             string number = number1.Text;
             string name = number_name.Text;
-            Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex rx = new Regex(@"^(\d+(,\d+)?;){3}\d+(,\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection matchedNumber1 = rx.Matches(number);
-            if (name.Length < 1) return "Nazwa nie może byc pusta";
             if (matchedNumber1.Count == 0) return "Błędny format liczby!";
+            if (name.Length < 1) return "Nazwa nie może być pusta!";
+
+            double[] arr = Fuzzy.TransformToDouble(number.Split(";"));
+
+            if (!(arr[0] > arr[1] && arr[1] >= arr[2] && arr[2] > arr[3]) && !(arr[0] < arr[1] && arr[1] <= arr[2] && arr[2] < arr[3]))
+            {
+                return "Błędna liczba rozmyta!";
+            }
+
+            if (Fuzzy.IsElementExist(name))
+            {
+                return "Liczba o wpisanej nazwie już istnieje!";
+            }
 
             using (StreamWriter sw = File.AppendText("fuzzy.txt"))
             {   
