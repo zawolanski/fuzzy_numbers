@@ -7,7 +7,7 @@ namespace zadanie_rozmyte
 {
     class Fuzzy
     {
-        public static dynamic FindElement(string name, List<Fuzzy> fuzzy_numbers)
+        public static double[] FindElement(string name, List<Fuzzy> fuzzy_numbers)
         {
             List<double> fuzzyNumbers = new List<double>();
 
@@ -20,7 +20,7 @@ namespace zadanie_rozmyte
                     return fuzzyNumbers.ToArray();
                 };
             }
-            return false;
+            return fuzzyNumbers.ToArray();
         }
 
         public static double[] TransformToDouble(string[] numbers)

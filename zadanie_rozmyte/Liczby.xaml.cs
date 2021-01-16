@@ -74,7 +74,7 @@ namespace zadanie_rozmyte
                 return false;
             }
 
-            /*if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)
+            /*if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)myGrid
             {
                 errors2.Text = "Liczby nie mogą być takie same!";
                 return false;
@@ -85,79 +85,140 @@ namespace zadanie_rozmyte
         {
             InitializeComponent();
             readText = File.ReadAllLines("fuzzy.txt");
-            
+
             foreach (string n in readText) fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0]));
 
-            StackPanel myStackPanel = new StackPanel();
-            myStackPanel.HorizontalAlignment = HorizontalAlignment.Left;
-            myStackPanel.VerticalAlignment = VerticalAlignment.Top;
-            
-            foreach(Fuzzy n in fuzzy_numbers)
-            {
-                TextBlock myTextBlock = new TextBlock();
-                myTextBlock.Text = $"{n.Name}:({n.Number})";
-                myTextBlock.FontSize = 22;
-                myStackPanel.Children.Add(myTextBlock);
+            Grid myGrid = new Grid();
+            ColumnDefinition colDef1 = new ColumnDefinition();
+            ColumnDefinition colDef2 = new ColumnDefinition();
+            RowDefinition rowDef1 = new RowDefinition();
+
+            Thickness margin = myGrid.Margin;
+            margin.Top = 30;
+            myGrid.Margin = margin;
+
+            myGrid.Width = 420;
+            myGrid.ShowGridLines = true;
+
+            myGrid.HorizontalAlignment = HorizontalAlignment.Right;
+            myGrid.VerticalAlignment = VerticalAlignment.Top;
+
+            myGrid.ColumnDefinitions.Add(colDef1);
+            myGrid.ColumnDefinitions.Add(colDef2);
+            myGrid.RowDefinitions.Add(rowDef1);
+
+            TextBlock titleNameTextBlock = new TextBlock();
+            TextBlock titleNumberTextBlock = new TextBlock();
+
+            titleNameTextBlock.Text = "Nazwa";
+            titleNumberTextBlock.Text = "Liczba";
+
+            Grid.SetColumn(titleNameTextBlock, 0);
+            Grid.SetRow(titleNameTextBlock, 0);
+            Grid.SetColumn(titleNumberTextBlock, 1);
+            Grid.SetRow(titleNumberTextBlock, 0);
+
+            titleNameTextBlock.FontSize = 32;
+            titleNumberTextBlock.FontSize = 32;
+
+            myGrid.Children.Add(titleNameTextBlock);
+            myGrid.Children.Add(titleNumberTextBlock);
+
+            for (int i = 0; i < fuzzy_numbers.Count; i++){
+                TextBlock nameTextBlock = new TextBlock();
+                TextBlock numberTextBlock = new TextBlock();
+
+                RowDefinition rowDef = new RowDefinition();
+                myGrid.RowDefinitions.Add(rowDef);
+
+                nameTextBlock.Text = $"{fuzzy_numbers[i].Name}";
+                numberTextBlock.Text = $"({fuzzy_numbers[i].Number})";
+
+                nameTextBlock.FontSize = 28;
+                numberTextBlock.FontSize = 28;
+
+                Grid.SetColumn(nameTextBlock, 0);
+                Grid.SetRow(nameTextBlock, i + 1);
+                Grid.SetColumn(numberTextBlock, 1);
+                Grid.SetRow(numberTextBlock, i + 1);
+
+                myGrid.Children.Add(nameTextBlock);
+                myGrid.Children.Add(numberTextBlock);
             }
 
-            viewer.Content = myStackPanel;
+            viewer.Content = myGrid;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string operation = dzialanie1.Text;
-            string[] inputNumbers = operation.Split('+', '-', '/', '*');
+            string operationValue = operation.Text;
+            string[] inputNumbers = operationValue.Split('+', '-', '/', '*');
 
             bool isValidNumbers = ValidateNumbers(inputNumbers);
             if(isValidNumbers == false) return;
 
-            int typ = CheckNumbers(inputNumbers[0], inputNumbers[1]);
-
-            double[] numbers1;
-            double[] numbers2;
-            //(2;4;6;7)+(2;4;6;7)
-
-            int pos;
-
-            if (typ == 0) {
-                numbers1 = Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
-                numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
-                pos = inputNumbers[0].Length;
-            } else if (typ == 1) {
-                bool isFuzzyNumber = Fuzzy.IsFuzzyNumber(inputNumbers[0]);
-                inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
-                if (isFuzzyNumber == false)
-                {
-                    errors2.Text = "Błędny format liczby!";
-                    return;
-                };
-                numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
-                numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
-                pos = inputNumbers[0].Length + 2;
-            } else { 
-                inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
-                inputNumbers[1] = inputNumbers[1].Replace("(", "").Replace(")", "");
-
-                MatchCollection matchedNumber1 = rx.Matches(inputNumbers[1]);
-                if (matchedNumber1.Count == 0)
-                {
-                    errors2.Text = "Błędny format liczby!";
-                    return;
-                };
-                
-                numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
-                numbers2 = Fuzzy.TransformToDouble(inputNumbers[1].Split(";"));
-                pos = inputNumbers[0].Length + 2;
-            }
-
-            //znajdowanie operatora
-            char operat = operation[pos];
-            errors3.Text = operat.ToString();
-            double num;
+            //przypisywanie wartości dyskretyzacji
             double discretizationValue = 1.0;
+            double num;
             if (Double.TryParse(discretization.Text, out num)) discretizationValue = num;
 
-            
+            double[] numbers1 = new double[(Int32.Parse(discretizationValue.ToString()) + 3)];
+            double[] numbers2 = new double[(Int32.Parse(discretizationValue.ToString()) + 3)];
+
+            //znajdowanie operatora
+            int pos = inputNumbers[0].Length;
+            char operat = operationValue[pos];
+            errors3.Text = operat.ToString();
+            //(2;4;6;7)+(2;4;6;7)
+
+
+            inputNumbers[0] = inputNumbers[0].Replace("(", "").Replace(")", "");
+            inputNumbers[1] = inputNumbers[1].Replace("(", "").Replace(")", "");
+            MatchCollection matchedNumber1 = rx.Matches(inputNumbers[0]);
+            MatchCollection matchedNumber2 = rx.Matches(inputNumbers[1]);
+
+            if (matchedNumber1.Count == 1) numbers1 = Fuzzy.TransformToDouble(inputNumbers[0].Split(";"));
+            else
+            {
+                int k = 1;
+                for (int i = 0; i < fuzzy_numbers.Count; i++)
+                {
+                    string name = fuzzy_numbers[i].Name;
+                    if (name == inputNumbers[0])
+                    {
+                        numbers1 = Fuzzy.FindElement(inputNumbers[0], fuzzy_numbers);
+                        k--;
+                        break;
+                    }
+                }
+                if(k == 1)
+                {
+                    errors2.Text = "Błędny format liczby!";
+                    return;
+                }
+            }
+
+            if (matchedNumber2.Count == 1) numbers2 = Fuzzy.TransformToDouble(inputNumbers[1].Split(";"));
+            else
+            {
+                int k = 1;
+                for (int i = 0; i < fuzzy_numbers.Count; i++)
+                {
+                    string name = fuzzy_numbers[i].Name;
+                    if (name == inputNumbers[1])
+                    {
+                        numbers2 = Fuzzy.FindElement(inputNumbers[1], fuzzy_numbers);
+                        k--;
+                        break;
+                    }
+                }
+                if (k == 1)
+                {
+                    errors2.Text = "Błędny format liczby!";
+                    return;
+                }
+            }
+
             errors2.Text = "";
             string result = "(";
             switch (operat)
@@ -193,17 +254,16 @@ namespace zadanie_rozmyte
                         y.Add(k);
                     }
 
-                    ups.AddRange(downs);
 
+                    result += $"{ups[0]};{ups.Last()};{downs[0]};{downs.Last()}"; 
+
+                    ups.AddRange(downs);
                     List<double> Ypoints = new List<double>();
                     Ypoints.AddRange(y);
                     y.Reverse();
                     Ypoints.AddRange(y);
 
                     SaveToExcel(ups, Ypoints);
-
-                    errors2.Text = "X: " + String.Join(" ", ups);
-                    errors3.Text = "Y: " + String.Join(" ", Ypoints);
 
                     break;
                 case '/':
@@ -241,7 +301,7 @@ namespace zadanie_rozmyte
                     break;
             }
             result += ")";
-            dzialanie1.Text = result;
+            operation.Text = result;
             
         }
 

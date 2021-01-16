@@ -5,49 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zadanie_rozmyte"
         mc:Ignorable="d"
-        Title="Liczby" Height="766" Width="450">
+        Title="Liczby" Height="800" Width="900" Background="#FF151515">
     <Grid>
-        <ScrollViewer x:Name="viewer" Margin="0,53,0,527" />
-        <TextBlock HorizontalAlignment="Center" Height="40" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" FontSize="36"><Run Language="pl-pl" Text="NAZWA"/><Run Text=" : "/><Run Language="pl-pl" Text="LICZBA"/></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="31" Margin="0,228,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" FontSize="18"><Run Language="pl-pl" Text="Wpisz działanie:"/></TextBlock>
-        <TextBox x:Name="dzialanie1" HorizontalAlignment="Center" Height="30" Margin="0,259,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" FontSize="20" />
-        <TextBlock x:Name="errors2" HorizontalAlignment="Center" Height="31" Margin="0,397,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
-        <Button Content="Wykonaj" HorizontalAlignment="Center" Height="42" Margin="0,350,0,0" VerticalAlignment="Top" Width="430" Click="Button_Click" FontSize="20"/>
-        <TextBlock HorizontalAlignment="Center" Height="24" Margin="0,449,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430" FontSize="18"><Run Text="Sprawdź prz"/><Run Language="pl-pl" Text="y"/><Run Text="należność"/><Run Text=":"/></TextBlock>
-        <TextBox x:Name="nameOfSet" HorizontalAlignment="Left" Height="30" Margin="10,521,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="141" FontSize="20" RenderTransformOrigin="0.5,0.5" Text="&#xD;&#xA;" >
-            <TextBox.RenderTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="2" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer x:Name="viewer" HorizontalAlignment="Left" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="440" Margin="10,10,0,351" Foreground="White"  >
+            <ScrollViewer.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1"/>
                     <SkewTransform/>
                     <RotateTransform/>
                     <TranslateTransform/>
                 </TransformGroup>
-            </TextBox.RenderTransform>
-        </TextBox>
-        <TextBlock HorizontalAlignment="Left" Height="21" Margin="10,495,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" FontSize="16" Text="Nazwa zbioru:"/>
-        <TextBlock HorizontalAlignment="Left" Height="21" Margin="225,495,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80" FontSize="16" Text="Argument:"/>
-        <TextBox x:Name="argument" HorizontalAlignment="Left" Height="30" Margin="225,521,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="139" FontSize="20" RenderTransformOrigin="0.5,0.5" >
-            <TextBox.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBox.RenderTransform>
-        </TextBox>
-        <Button Content="Oblicz przynależność" HorizontalAlignment="Center" Height="42" Margin="0,567,0,0" VerticalAlignment="Top" Width="430" Click="Button_Click2" FontSize="20"/>
-        <TextBlock x:Name="errors3" HorizontalAlignment="Center" Height="31" Margin="0,621,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
-        <TextBox x:Name="discretization" HorizontalAlignment="Left" Height="30" Margin="130,301,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="88" FontSize="20" RenderTransformOrigin="0.5,0.5" >
-            <TextBox.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBox.RenderTransform>
-        </TextBox>
-        <TextBlock HorizontalAlignment="Left" Height="31" Margin="10,300,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="115" FontSize="18"><Run Language="pl-pl" Text="Dyskretyzacja"/><Run Text=":"/></TextBlock>
+            </ScrollViewer.RenderTransform>
+        </ScrollViewer>
+        <TextBlock Width="2" Height="784" Grid.Column="1" Background="#FF404040" />
+        <StackPanel>
+            <StackPanel Margin="0,0,0,19" >
+                <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,30,0,15" Foreground="White"><Run Language="pl-pl" Text="Wpisz działanie:"/></TextBlock>
+                <TextBox x:Name="operation" Height="50"  TextWrapping="Wrap" Width="400" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
+                <TextBlock Height="40" TextWrapping="Wrap" Width="400" FontSize="30" Margin="0,30,0,15" TextAlignment="Center" Foreground="White"><Run Language="pl-pl" Text="Dyskretyzacja"/><Run Text=":"/></TextBlock>
+                <TextBox x:Name="discretization" Height="50"  TextWrapping="Wrap" Width="100" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" Text="1" />
+                <Button Content="Wykonaj" Height="50" Width="250" Click="Button_Click" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
+                <TextBlock x:Name="errors2" Height="55" TextWrapping="Wrap" Width="400" Text="DUAP DUAP DUAP DUPA DUPA DUAP DUAP DUPA DUPA" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
+            </StackPanel>
+            <TextBlock Height="2" Background="#FF404040" />
+            <StackPanel Height="329">
+                <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,5,0,15" Foreground="White"><Run Language="pl-pl" />
+                    <Run Text="Sprawdź prz"/><Run Language="pl-pl" Text="y"/><Run Text="należność"/><Run Text=":"/>
+                </TextBlock>
+                <WrapPanel Height="30" HorizontalAlignment="Center" Margin="0,15,0,15">
+                    <TextBlock Height="30"  TextWrapping="Wrap" Width="170" FontSize="20" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" ><Run Language="pl-pl" Text="Nazwa zbioru:"/></TextBlock>
+                    <TextBox x:Name="nameOfSet" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
+                </WrapPanel>
+                <WrapPanel Height="30" HorizontalAlignment="Center" Margin="0,15,0,15">
+                    <TextBlock Height="30"  TextWrapping="Wrap" Width="170" FontSize="20" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" ><Run Language="pl-pl" Text="Argument:"/></TextBlock>
+                    <TextBox x:Name="argument" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
+                </WrapPanel>
+                <Button Content="Oblicz przynależność" Height="50" Width="250" Click="Button_Click2" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
+                <TextBlock x:Name="errors3" Height="55" TextWrapping="Wrap" Width="400" Text="DUAP DUAP DUAP DUPA DUPA DUAP DUAP DUPA DUPA" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
