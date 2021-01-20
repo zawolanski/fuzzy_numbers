@@ -12,7 +12,7 @@ namespace zadanie_rozmyte
         public double[] CheckNumber(List<Fuzzy> fuzzy_numbers)
         {
             string currentNumber = Number.Replace("(", "").Replace(")", "");
-            Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){3,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection matchedNumber = rx.Matches(currentNumber);
             if (matchedNumber.Count == 1)
             {

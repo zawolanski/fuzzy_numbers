@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zadanie_rozmyte"
         mc:Ignorable="d"
-        Title="Liczby" Height="800" Width="900" Background="#FF151515">
+        Title="Liczby" Height="887" Width="1188" Background="#FF151515">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="2" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <ScrollViewer x:Name="viewer" HorizontalAlignment="Left" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="440" Margin="10,10,0,10" Foreground="White"  >
+        <ScrollViewer x:Name="viewer" HorizontalAlignment="Center" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="771" Margin="0,10,0,10" Foreground="White"  >
             <ScrollViewer.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1"/>
@@ -22,18 +22,16 @@
                 </TransformGroup>
             </ScrollViewer.RenderTransform>
         </ScrollViewer>
-        <TextBlock Width="2" Height="784" Grid.Column="1" Background="#FF404040" />
+        <TextBlock Width="2" Height="865" Grid.Column="1" Background="#FF404040" />
         <StackPanel>
             <StackPanel Margin="0,0,0,19" >
                 <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,30,0,15" Foreground="White"><Run Language="pl-pl" Text="Wpisz działanie:"/></TextBlock>
-                <TextBox x:Name="operation" Height="50"  TextWrapping="Wrap" Width="400" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
-                <TextBlock Height="40" TextWrapping="Wrap" Width="400" FontSize="30" Margin="0,30,0,15" TextAlignment="Center" Foreground="White"><Run Language="pl-pl" Text="Dyskretyzacja"/><Run Text=":"/></TextBlock>
-                <TextBox x:Name="discretization" Height="50"  TextWrapping="Wrap" Width="100" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" Text="1" />
+                <TextBox x:Name="operation" Height="270"  TextWrapping="Wrap" Width="375" FontSize="34" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
                 <Button Content="Wykonaj" Height="50" Width="250" Click="Button_Click" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
                 <TextBlock x:Name="errors2" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Height="2" Background="#FF404040" />
-            <StackPanel Height="329">
+            <StackPanel Height="348">
                 <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,5,0,15" Foreground="White"><Run Language="pl-pl" />
                     <Run Text="Sprawdź prz"/><Run Language="pl-pl" Text="y"/><Run Text="należność"/><Run Text=":"/>
                 </TextBlock>

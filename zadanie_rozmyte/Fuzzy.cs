@@ -38,7 +38,7 @@ namespace zadanie_rozmyte
         }
         public static bool IsFuzzyNumber(string number)
         {
-            Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){3,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             number = number.Replace("(", "").Replace(")", "");
             MatchCollection matchedNumber1 = rx.Matches(number);
 
