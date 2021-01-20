@@ -213,7 +213,7 @@ namespace zadanie_rozmyte
             numbers1 = n1.CheckNumber(fuzzy_numbers);
             numbers2 = n2.CheckNumber(fuzzy_numbers);
 
-            if ((numbers1.Length != numbers2.Length) || numbers1.Length == 0 || numbers2.Length == 0)
+            if (numbers1.Length != numbers2.Length || numbers1.Length == 0 || numbers2.Length == 0)
             {
                 errors2.Text = "Podane wartości są nieprawidłowe!";
                 return;
