@@ -52,17 +52,20 @@ namespace zadanie_rozmyte
         }
         public string Name { get; set; }
         public string Number { get; set; }
+        public double Discretization { get; set; }
 
         public Fuzzy()
         {
             Name = "";
             Number = "";
+            Discretization = 1.0;
         }
 
-        public Fuzzy(string name, string number)
+        public Fuzzy(string name, string number, double discretization)
         {
             Name = name;
             Number = number;
+            Discretization = discretization;
         }
     }
 }

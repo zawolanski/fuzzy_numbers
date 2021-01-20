@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using Spire.Xls;
+using System.Diagnostics;
 
 namespace zadanie_rozmyte
 {
@@ -26,7 +27,7 @@ namespace zadanie_rozmyte
     {
         string[] readText;
         List<Fuzzy> fuzzy_numbers = new List<Fuzzy>();
-        Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        Regex rx = new Regex(@"^(-\d+(.\d+)?;){3}-\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         //jeśli zwróci 0 to obie liczby były zmiennymi, a jeśli 1 to tylko druga liczba była zmienną
         private int CheckNumbers(string n1, string n2)
         {
@@ -74,11 +75,6 @@ namespace zadanie_rozmyte
                 return false;
             }
 
-            /*if (inputNumbers[0] == inputNumbers[1]) //zapytać czy można dodawać te same (a+a) (1;1;1;1)+(1;1;1;1)myGrid
-            {
-                errors2.Text = "Liczby nie mogą być takie same!";
-                return false;
-            }*/
             return true;
         }
         public Liczby()
@@ -86,7 +82,10 @@ namespace zadanie_rozmyte
             InitializeComponent();
             readText = File.ReadAllLines("fuzzy.txt");
 
-            foreach (string n in readText) fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0]));
+            foreach (string n in readText)
+            {
+                fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0], Double.Parse(n.Split("|")[2])));
+            }
 
             Grid myGrid = new Grid();
             ColumnDefinition colDef1 = new ColumnDefinition();
@@ -158,9 +157,9 @@ namespace zadanie_rozmyte
             if (isValidNumbers == false) return;
 
             //przypisywanie wartości dyskretyzacji
-            double discretizationValue = 1.0;
+            /*double discretizationValue = 1.0;
             double num;
-            if (Double.TryParse(discretization.Text, out num)) discretizationValue = num;
+            if (Double.TryParse(discretization.Text, out num)) discretizationValue = num;*/
 
             double[] numbers1;
             double[] numbers2;
@@ -175,10 +174,25 @@ namespace zadanie_rozmyte
             numbers1 = n1.CheckNumber(fuzzy_numbers);
             numbers2 = n2.CheckNumber(fuzzy_numbers);
 
-            if (numbers1.Length == 0 || numbers2.Length == 0)
+            if (numbers1.Length == 0 || numbers2.Length == 0 && numbers1.Length != numbers2.Length)
             {
                 errors2.Text = "Podane wartości są nieprawidłowe!";
                 return;
+            }
+
+            double discretization = 1.0;
+            string numberConcat = "";
+
+            for(int i = 0; i < numbers1.Length; i++) {
+                numberConcat += numbers1[i].ToString();
+                if (i < numbers1.Length - 1) numberConcat += ";";
+            }
+
+            foreach(Fuzzy d in fuzzy_numbers) {
+                if (d.Number == numberConcat) {
+                    discretization = d.Discretization;
+                    break;
+                };
             }
 
             errors2.Text = "";
@@ -186,73 +200,112 @@ namespace zadanie_rozmyte
             switch (operat)
             {
                 case '+':
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < numbers1.Length; i++)
                     {
                         result += (numbers1[i] + numbers2[i]).ToString();
                         if (i < 3) result += ";";
                     }
                     break;
                 case '-':
-                    for (int i = 0; i < 4; i++)
+                    List<double> yAdd = new List<double>();
+
+                    double mAdd = 1 / discretization;
+                    for (int d = 0; d < numbers1.Length; d++)
                     {
-                        result += (numbers1[i] - numbers2[i]).ToString();
-                        if (i < 3) result += ";";
+                        double k = Math.Round(mAdd * d, 5);
+
+                        result += (Math.Round(numbers1[d] - numbers2[d], 2)).ToString();
+                        if (d < numbers1.Length - 1) result += ";";
+
+                        if (k <= 1) yAdd.Add(k);
                     }
+
+                    List<double> YpointsAdd = new List<double>();
+                    YpointsAdd.AddRange(yAdd);
+                    yAdd.Reverse();
+                    YpointsAdd.AddRange(yAdd);
+
+                    for (int i = 0; i < YpointsAdd.Count; i++)
+                    {
+                        //Debug.WriteLine(Ypoints[i]);
+                    }
+
+                    List<double> upsAdd = new List<double>();
+                    string[] resultArrAdd = result.Split(";");
+                    for (int i = 0; i < resultArrAdd.Length; i++)
+                    {
+                        resultArrAdd[i] = resultArrAdd[i].Replace("(", "");
+                        upsAdd.Add(Double.Parse(resultArrAdd[i]));
+                    }
+
+                    SaveToExcel(upsAdd, YpointsAdd);
                     break;
                 case '*':
-                    List<double> ups = new List<double>();
-                    List<double> downs = new List<double>();
-                    List<double> y = new List<double>();
+                    List<double> yList = new List<double>();
 
-                    double m = 1 / discretizationValue;
-                    for (int d = 0; d <= discretizationValue; d++)
+                    double m = 1 / discretization;
+                    for (int d = 0; d < numbers1.Length; d++)
                     {
                         double k = Math.Round(m * d, 5);
-                        double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) * (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
-                        double down = Math.Round((k * (numbers1[3] - numbers1[2]) + numbers1[2]) * (k * (numbers2[3] - numbers2[2]) + numbers2[2]), 2);
 
-                        ups.Add(up);
-                        downs.Add(down);
-                        y.Add(k);
+                        result += (Math.Round(numbers1[d] * numbers2[d], 2)).ToString();
+                        if (d < numbers1.Length - 1) result += ";";
+
+                        if(k <= 1) yList.Add(k);
                     }
 
-
-                    result += $"{ups[0]};{ups.Last()};{downs[0]};{downs.Last()}"; 
-
-                    ups.AddRange(downs);
                     List<double> Ypoints = new List<double>();
-                    Ypoints.AddRange(y);
-                    y.Reverse();
-                    Ypoints.AddRange(y);
+                    Ypoints.AddRange(yList);
+                    yList.Reverse();
+                    Ypoints.AddRange(yList);
+
+                    for(int i = 0; i < Ypoints.Count; i++)
+                    {
+                        //Debug.WriteLine(Ypoints[i]);
+                    }
+
+                    List<double> ups = new List<double>();
+                    string[] resultArr = result.Split(";");
+                    for (int i = 0; i < resultArr.Length; i++)
+                    {
+                        resultArr[i] = resultArr[i].Replace("(", "");
+                        ups.Add(Double.Parse(resultArr[i]));
+                    }
 
                     SaveToExcel(ups, Ypoints);
 
                     break;
                 case '/':
-                    List<double> ups2 = new List<double>();
-                    List<double> downs2 = new List<double>();
-                    List<double> y2 = new List<double>();
+                    List<double> yList2 = new List<double>();
 
-                    double m2 = 1 / discretizationValue;
-                    for (int d = 0; d <= discretizationValue; d++)
+                    double m2 = 1 / discretization;
+                    for (int d = 0; d < numbers1.Length; d++)
                     {
                         double k = Math.Round(m2 * d, 5);
-                        double up = Math.Round((k * (numbers1[1] - numbers1[0]) + numbers1[0]) / (k * (numbers2[1] - numbers2[0]) + numbers2[0]), 2);
-                        double down = Math.Round((k * (numbers1[3] - numbers1[2]) + numbers1[2]) / (k * (numbers2[3] - numbers2[2]) + numbers2[2]), 2);
 
-                        ups2.Add(up);
-                        downs2.Add(down);
-                        y2.Add(k);
+                        if(numbers2[d] == 0)
+                        {
+                            errors2.Text = "Nie można dzielić przez zero!";
+                            return;
+                        }
+                        result += (Math.Round(numbers1[d] / numbers2[d], 2)).ToString();
+                        if (d < numbers1.Length - 1) result += ";";
+
+                        if (k <= 1) yList2.Add(k);
                     }
 
-
-                    result += $"{ups2[0]};{ups2.Last()};{downs2[0]};{downs2.Last()}";
-
-                    ups2.AddRange(downs2);
                     List<double> Ypoints2 = new List<double>();
-                    Ypoints2.AddRange(y2);
-                    y2.Reverse();
-                    Ypoints2.AddRange(y2);
+                    Ypoints2.AddRange(yList2);
+                    yList2.Reverse();
+                    Ypoints2.AddRange(yList2);
+
+                    List<double> ups2 = new List<double>();
+                    string[] resultArr2 = result.Split(";");
+                    for (int i = 0; i < resultArr2.Length; i++)
+                    {
+                        resultArr2[i] = resultArr2[i].Replace("(", "");
+                        ups2.Add(Double.Parse(resultArr2[i]));
+                    }
 
                     SaveToExcel(ups2, Ypoints2);
 
@@ -270,7 +323,6 @@ namespace zadanie_rozmyte
         {
             string nameOfSetVar = nameOfSet.Text.Trim();
             double argumentVar = Double.Parse(argument.Text.Trim());
-            
 
             int typ = CheckNumbers(nameOfSetVar, nameOfSetVar);
             if (typ != 0)

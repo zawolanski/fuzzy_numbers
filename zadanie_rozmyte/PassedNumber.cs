@@ -13,11 +13,11 @@ namespace zadanie_rozmyte
         {
             string currentNumber = Number.Replace("(", "").Replace(")", "");
             Regex rx = new Regex(@"^(\d+(.\d+)?;){3}\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            MatchCollection matchedNumber1 = rx.Matches(currentNumber);
-            if (matchedNumber1.Count == 1)
+            MatchCollection matchedNumber = rx.Matches(currentNumber);
+            if (matchedNumber.Count == 1)
             {
                 double[] arr = Fuzzy.TransformToDouble(currentNumber.Split(";"));
-                if((arr[0] > arr[1] && arr[1] >= arr[2] && arr[2] > arr[3]) || (arr[0] < arr[1] && arr[1] <= arr[2] && arr[2] < arr[3]))
+                if((arr[0] >= arr[1] && arr[1] >= arr[2] && arr[2] >= arr[3]) || (arr[0] <= arr[1] && arr[1] <= arr[2] && arr[2] <= arr[3]))
                 {
                     return arr;
                 }
