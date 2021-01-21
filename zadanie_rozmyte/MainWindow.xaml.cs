@@ -79,16 +79,19 @@ namespace zadanie_rozmyte
             Ypoints.AddRange(y);
 
             string numberStr = "";
-            for(int i = 0; i < ups.Count; i++) {
+            string yStr = "";
+            for (int i = 0; i < ups.Count; i++) {
                 numberStr += ups[i];
+                yStr += Ypoints[i];
                 if (i < ups.Count - 1) numberStr += ";";
+                if (i < Ypoints.Count - 1) yStr += ";";
             }
 
             Debug.WriteLine(numberStr);
 
             using (StreamWriter sw = File.AppendText("fuzzy.txt"))
             {   
-                sw.WriteLine($"{numberStr}|{name}|{discretizationValue}");
+                sw.WriteLine($"{numberStr}|{name}|{discretizationValue}|{yStr}");
             }
             
             number1.Text = "";

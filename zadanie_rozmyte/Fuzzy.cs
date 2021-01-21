@@ -30,6 +30,22 @@ namespace zadanie_rozmyte
             return fuzzyNumbers.ToArray();
         }
 
+        public static double[] FindY(string name, List<Fuzzy> fuzzy_numbers)
+        {
+            List<double> fuzzyNumbers = new List<double>();
+
+            foreach (Fuzzy f in fuzzy_numbers)
+            {
+                if (f.Name == name)
+                {
+                    string[] numbers = f.Y.Split(';');
+                    foreach (string n in numbers) fuzzyNumbers.Add(Double.Parse(n));
+                    return fuzzyNumbers.ToArray();
+                };
+            }
+            return fuzzyNumbers.ToArray();
+        }
+
         public static double[] TransformToDouble(string[] numbers)
         {
             List<double> m = new List<double>();
@@ -53,19 +69,22 @@ namespace zadanie_rozmyte
         public string Name { get; set; }
         public string Number { get; set; }
         public double Discretization { get; set; }
+        public string Y { get; set; }
 
         public Fuzzy()
         {
             Name = "";
             Number = "";
             Discretization = 1.0;
+            Y = "";
         }
 
-        public Fuzzy(string name, string number, double discretization)
+        public Fuzzy(string name, string number, double discretization, string y)
         {
             Name = name;
             Number = number;
             Discretization = discretization;
+            Y = y;
         }
     }
 }

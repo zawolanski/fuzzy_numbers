@@ -125,7 +125,7 @@ namespace zadanie_rozmyte
 
             foreach (string n in readText)
             {
-                fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0], Double.Parse(n.Split("|")[2])));
+                fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0], Double.Parse(n.Split("|")[2]), n.Split("|")[3]));
             }
 
             Grid myGrid = new Grid();
@@ -270,29 +270,92 @@ namespace zadanie_rozmyte
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
-            string nameOfSetVar = nameOfSet.Text.Trim();
+            //string nameOfSetVar = nameOfSet.Text.Trim();
             double argumentVar = Double.Parse(argument.Text.Trim());
+            List<double> res = new List<double>();
 
-            int typ = CheckNumbers(nameOfSetVar, nameOfSetVar);
+            double[] n = new double[] { 4, 2.74, 1.66, 0.74, 0, -0.57, -0.98, -1.22, -1.28, -1.17, -0.9, 24, 28.35, 33, 37.95, 43.2, 48.75, 54.6, 60.75, 67.2, 73.95, 81 };
+            double[] Y = new double[] { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0 };
+            /*int typ = CheckNumbers(nameOfSetVar, nameOfSetVar);
             if (typ != 0)
             {
                 errors3.Text = "Brak liczby o podanej nazwie!";
                 return;
+            }*/
+
+            /*double[] number = Fuzzy.FindElement(nameOfSetVar, fuzzy_numbers);
+
+            if(number.Length == 0)
+            {
+                nameOfSetVar = nameOfSetVar.Replace("(", "").Replace(")", "");
+                number = new double[nameOfSetVar.Split(";").Length];
+                for (int i = 0;i < nameOfSetVar.Split(";").Length; i++)
+                    number[i] = Double.Parse(nameOfSetVar.Split(";")[i]);
             }
 
-            double[] number = Fuzzy.FindElement(nameOfSetVar, fuzzy_numbers);
+            double[] sortedArray = new double[number.Length];
+            Array.Copy(number, 0, sortedArray, 0, number.Length);
+            Array.Sort(sortedArray);*/
 
-            if(argumentVar <= number[0] || argumentVar > number[3]) errors3.Text = "Wartość przynależności wynosi wynosi: 0";
-            else if(argumentVar > number[1] && argumentVar <= number[2]) errors3.Text = "Wartość przynależności wynosi wynosi: 1";
-            else if (argumentVar > number[0] && argumentVar <= number[1])
+            //(-11;-8,6;-6,39;-4,56;-3,01;-1,74;-0,7;0;6;4,7;3,07;1,12;-1,2;-3,81;-6,74;-10)
+            /*double first = sortedArray[0];
+            double center1 = number[number.Length / 2 - 1];
+            double center2 = number[number.Length / 2];
+            double end = sortedArray[number.Length - 1];
+
+            double[] firstPart = new double[number.Length / 2];
+            double[] secondPart = new double[number.Length / 2];
+
+            Array.Copy(number, 0, firstPart, 0, number.Length / 2);
+            Array.Copy(number, 0, secondPart, 0, number.Length / 2);*/
+
+            // -------------------- sprawdzanie ------------------------
+            //if (argumentVar <= first || argumentVar > end) res.Add(0);
+            //if(argumentVar > center1 && argumentVar <= center2) res.Add(1);
+
+            // --------------------------------------------
+
+            //double[] Y = Fuzzy.FindY(nameOfSetVar, fuzzy_numbers);
+
+
+            for (int i = 1; i < n.Length - 1; i++)
             {
-                double result = (argumentVar - number[0])/(number[1] - number[0]);
-                errors3.Text = $"Wartość przynależności wynosi wynosi: {result}";
+                if ((n[i] - n[i - 1]) != 0)
+                {
+                    if (argumentVar > n[i - 1] && argumentVar <= n[i] || argumentVar <= n[i - 1] && argumentVar > n[i])
+                    {
+                        double a1 = (Y[i - 1] - Y[i]);
+                        double a2 = (n[i - 1] - n[i]);
+                        double a = Math.Round(a1 / a2, 6);
+                        double b = Y[i - 1] - (a * n[i - 1]);
+
+                        //Debug.WriteLine($"a: {a}, b: {b}");
+
+                        double y = a * argumentVar + b;
+                        Debug.WriteLine($"{y}");
+
+                        double result = (argumentVar - n[i - 1]) / (n[i] - n[i - 1]);
+                        res.Add(result);
+                    }
+                }
             }
-            else if (argumentVar > number[2] && argumentVar <= number[3])
+            if (res.Count == 0) res.Add(0);
+
+            /*foreach (double r in res)
             {
-                double result = (number[3] - argumentVar) / (number[3] - number[2]);
-                errors3.Text = $"Wartość przynależności wynosi wynosi: {result}";
+                Debug.WriteLine(r);
+            }*/
+
+            if(res.Count == 0) errors3.Text = $"Wystąpił błąd podczas obliczeń!";
+            else
+            {
+                string text = "";
+                foreach (double r in res)
+                {
+                    text += $"* {r}\n";
+                    Debug.WriteLine(r);
+                }
+                errors3.Text = $"Wartości przynależności wynoszą:\n{text}";
             }
         }
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zadanie_rozmyte"
         mc:Ignorable="d"
-        Title="Liczby" Height="887" Width="1188" Background="#FF151515">
+        Title="Liczby" Height="961" Width="1188" Background="#FF151515">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -22,7 +22,7 @@
                 </TransformGroup>
             </ScrollViewer.RenderTransform>
         </ScrollViewer>
-        <TextBlock Width="2" Height="865" Grid.Column="1" Background="#FF404040" />
+        <TextBlock Width="2" Background="#FF404040" Grid.ColumnSpan="2" Margin="395,40,0,10" />
         <StackPanel>
             <StackPanel Margin="0,0,0,19" >
                 <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,30,0,15" Foreground="White"><Run Language="pl-pl" Text="Wpisz działanie:"/></TextBlock>
@@ -31,7 +31,7 @@
                 <TextBlock x:Name="errors2" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold" />
             </StackPanel>
             <TextBlock Height="2" Background="#FF404040" />
-            <StackPanel Height="348">
+            <StackPanel Height="422">
                 <TextBlock Height="40"  TextWrapping="Wrap" Width="400" FontSize="30" TextAlignment="Center" Margin="0,5,0,15" Foreground="White"><Run Language="pl-pl" />
                     <Run Text="Sprawdź prz"/><Run Language="pl-pl" Text="y"/><Run Text="należność"/><Run Text=":"/>
                 </TextBlock>
@@ -44,7 +44,7 @@
                     <TextBox x:Name="argument" Height="30"  TextWrapping="Wrap" Width="150" FontSize="20" RenderTransformOrigin="0.5,0.5" BorderBrush="White" BorderThickness="2,2,2,2" Background="#FF151515" Foreground="White" />
                 </WrapPanel>
                 <Button Content="Oblicz przynależność" Height="50" Width="250" Click="Button_Click2" FontSize="24" Margin="0,20,0,20" Background="White" Foreground="#FF151515" BorderBrush="White"/>
-                <TextBlock x:Name="errors3" Height="55" TextWrapping="Wrap" Width="400" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold"/>
+                <TextBlock x:Name="errors3" Height="147" TextWrapping="Wrap" Width="389" FontSize="20" TextAlignment="Justify" Foreground="White" FontWeight="Bold"/>
             </StackPanel>
         </StackPanel>
     </Grid>
