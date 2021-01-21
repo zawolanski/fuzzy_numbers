@@ -61,7 +61,7 @@ namespace zadanie_rozmyte
             workbook.SaveToFile("fuzzynumbers.xlsx", ExcelVersion.Version2016);
         }
 
-        private string CalculateNumbers(string oper, double[] numbers1, double[] numbers2, double discretization)
+        private string CalculateNumbers(string oper, double[] numbers1, double[] numbers2, double discretization, string name)
         {
             string result = "(";
             List<double> y = new List<double>();
@@ -91,10 +91,22 @@ namespace zadanie_rozmyte
 
             List<double> upsAdd = new List<double>();
             string[] resultArrAdd = result.Split(";");
+            string Yresult = "";
             for (int i = 0; i < resultArrAdd.Length; i++)
             {
                 resultArrAdd[i] = resultArrAdd[i].Replace("(", "");
                 upsAdd.Add(Double.Parse(resultArrAdd[i]));
+                Yresult += Y[i];
+                if (i < resultArrAdd.Length - 1) Yresult += ";";
+            }
+
+            if (name != "")
+            {
+                using (StreamWriter sw = File.AppendText("fuzzy.txt"))
+                {
+                    sw.WriteLine($"{result.Replace("(", "").Replace(")", "")}|{name}|{discretization}|{Yresult}");
+                }
+                Init();
             }
 
             SaveToExcel(upsAdd, Y);
@@ -118,9 +130,9 @@ namespace zadanie_rozmyte
 
             return true;
         }
-        public Liczby()
+
+        private void Init()
         {
-            InitializeComponent();
             readText = File.ReadAllLines("fuzzy.txt");
 
             foreach (string n in readText)
@@ -164,7 +176,8 @@ namespace zadanie_rozmyte
             myGrid.Children.Add(titleNameTextBlock);
             myGrid.Children.Add(titleNumberTextBlock);
 
-            for (int i = 0; i < fuzzy_numbers.Count; i++) {
+            for (int i = 0; i < fuzzy_numbers.Count; i++)
+            {
                 TextBlock nameTextBlock = new TextBlock();
                 TextBlock numberTextBlock = new TextBlock();
 
@@ -188,14 +201,25 @@ namespace zadanie_rozmyte
                 myGrid.Children.Add(nameTextBlock);
                 myGrid.Children.Add(numberTextBlock);
             }
-
             viewer.Content = myGrid;
+        }
+        public Liczby()
+        {
+            InitializeComponent();
+            Init();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string operationValue = operation.Text;
             string[] inputNumbers = operationValue.Split('+', '-', '/', '*');
+            string nameValue = name.Text;
+
+            if (Fuzzy.IsElementExist(nameValue))
+            {
+                errors2.Text = "Liczba o wpisanej nazwie już istnieje!";
+                return;
+            }
 
             bool isValidNumbers = ValidateNumbers(inputNumbers);
             if (isValidNumbers == false) return;
@@ -235,24 +259,23 @@ namespace zadanie_rozmyte
                 };
             }
 
-
             //obliczenia
             string result = "";
             errors2.Text = "";
             switch (operat)
             {
                 case '-':
-                    result = CalculateNumbers("-", numbers1, numbers2, discretization);
+                    result = CalculateNumbers("-", numbers1, numbers2, discretization, nameValue);
                     break;
                 case '+':
-                    result = CalculateNumbers("+", numbers1, numbers2, discretization);
+                    result = CalculateNumbers("+", numbers1, numbers2, discretization, nameValue);
                     break;
                 case '*':
-                    result = CalculateNumbers("*", numbers1, numbers2, discretization);
+                    result = CalculateNumbers("*", numbers1, numbers2, discretization, nameValue);
 
                     break;
                 case '/':
-                    result = CalculateNumbers("/", numbers1, numbers2, discretization);
+                    result = CalculateNumbers("/", numbers1, numbers2, discretization, nameValue);
                     if (result == "")
                     {
                         errors2.Text = "Nie można dzielić przez 0";

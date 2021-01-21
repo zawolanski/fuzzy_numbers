@@ -87,8 +87,6 @@ namespace zadanie_rozmyte
                 if (i < Ypoints.Count - 1) yStr += ";";
             }
 
-            Debug.WriteLine(numberStr);
-
             using (StreamWriter sw = File.AppendText("fuzzy.txt"))
             {   
                 sw.WriteLine($"{numberStr}|{name}|{discretizationValue}|{yStr}");
