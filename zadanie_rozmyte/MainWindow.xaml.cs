@@ -28,7 +28,7 @@ namespace zadanie_rozmyte
         {
             string number = number1.Text;
             string name = number_name.Text;
-            Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){3,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){2,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection matchedNumber1 = rx.Matches(number);
             if (matchedNumber1.Count == 0) return "Błędny format liczby!";
             if (name.Length < 1) return "Nazwa nie może być pusta!";

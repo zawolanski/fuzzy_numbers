@@ -27,7 +27,7 @@ namespace zadanie_rozmyte
     {
         string[] readText;
         List<Fuzzy> fuzzy_numbers = new List<Fuzzy>();
-        Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){3,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        Regex rx = new Regex(@"^(\-?\d+(.\d+)?;){2,}\-?\d+(.\d+)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         //jeśli zwróci 0 to obie liczby były zmiennymi, a jeśli 1 to tylko druga liczba była zmienną
         private int CheckNumbers(string n1, string n2)
         {
@@ -44,7 +44,7 @@ namespace zadanie_rozmyte
 
         }
 
-        private void SaveToExcel(List<double> ups, List<double> Ypoints)
+        private void SaveToExcel(List<double> ups, List<double> Ypoints) 
         {
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
@@ -79,7 +79,6 @@ namespace zadanie_rozmyte
                     
                     result += (Math.Round(numbers1[d] / numbers2[d], 2)).ToString(); }
 
-
                 if (d < numbers1.Length - 1) result += ";";
                 if (k <= 1) y.Add(k);
             }
@@ -99,6 +98,7 @@ namespace zadanie_rozmyte
                 Yresult += Y[i];
                 if (i < resultArrAdd.Length - 1) Yresult += ";";
             }
+
 
             if (name != "")
             {
@@ -140,7 +140,7 @@ namespace zadanie_rozmyte
             {
                 fuzzy_numbers.Add(new Fuzzy(n.Split("|")[1], n.Split("|")[0], Double.Parse(n.Split("|")[2]), n.Split("|")[3]));
             }
-
+            
             Grid myGrid = new Grid();
             ColumnDefinition colDef1 = new ColumnDefinition();
             ColumnDefinition colDef2 = new ColumnDefinition();
@@ -223,7 +223,6 @@ namespace zadanie_rozmyte
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string operationValue = operation.Text;
-            string[] inputNumbers = operationValue.Split('+', '-', '/', '*');
             string nameValue = name.Text;
 
             if (Fuzzy.IsElementExist(nameValue))
@@ -231,6 +230,27 @@ namespace zadanie_rozmyte
                 errors2.Text = "Liczba o wpisanej nazwie już istnieje!";
                 return;
             }
+            int pos;
+
+            Regex rx = new Regex(@"^\(?(\-?\d+(,\d+)?;){2,}\-?\d+(,\d+)?\)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            string[] separatingStrings = { ")-", "-(", ")*", "*(", ")/", "/(", ")+", "+(" };
+            string[] inputNumbers = operationValue.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
+            if (inputNumbers.Length != 2)
+            {
+                inputNumbers = operationValue.Split('-', '+', '/', '*');
+                if (inputNumbers.Length != 2)
+                {
+                    errors2.Text = "Błędna operacja!";
+                    return;
+                }
+
+                pos = inputNumbers[0].Length;
+            } else
+            {
+                pos = inputNumbers[0].Length + 1;
+            }
+
+            char operat = operationValue[pos];
 
             bool isValidNumbers = ValidateNumbers(inputNumbers);
             if (isValidNumbers == false) return;
@@ -239,8 +259,6 @@ namespace zadanie_rozmyte
             double[] numbers2;
 
             //znajdowanie operatora
-            int pos = inputNumbers[0].Length;
-            char operat = operationValue[pos];
             //(2;4;6;7)+(2;4;6;7)
             PassedNumber n1 = new PassedNumber(inputNumbers[0]);
             PassedNumber n2 = new PassedNumber(inputNumbers[1]);
@@ -263,12 +281,10 @@ namespace zadanie_rozmyte
                 if (i < numbers1.Length - 1) numberConcat += ";";
             }
 
-            foreach(Fuzzy d in fuzzy_numbers) {
-                if (d.Number == numberConcat) {
-                    discretization = d.Discretization;
-                    break;
-                };
-            }
+            Fuzzy obj = fuzzy_numbers.Find(x => x.Number == numberConcat);
+
+            if (obj != null) discretization = obj.Discretization;
+            else { discretization = numberConcat.Split(";").Length / 2 - 1; }
 
             //obliczenia
             string result = "";
@@ -304,53 +320,31 @@ namespace zadanie_rozmyte
 
         private void Button_Click2(object sender, RoutedEventArgs e)
         {
-            //string nameOfSetVar = nameOfSet.Text.Trim();
-            double argumentVar = Double.Parse(argument.Text.Trim());
+            string nameOfSetVar;
+            double argumentVar;
             List<double> res = new List<double>();
 
-            double[] n = new double[] { 4, 2.74, 1.66, 0.74, 0, -0.57, -0.98, -1.22, -1.28, -1.17, -0.9, 24, 28.35, 33, 37.95, 43.2, 48.75, 54.6, 60.75, 67.2, 73.95, 81 };
-            double[] Y = new double[] { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0 };
-            /*int typ = CheckNumbers(nameOfSetVar, nameOfSetVar);
-            if (typ != 0)
+            if (argument.Text.Length <= 0 || nameOfSet.Text.Length <= 0)
             {
-                errors3.Text = "Brak liczby o podanej nazwie!";
+                errors3.Text = "Pola nie mogą być puste!!";
                 return;
-            }*/
-
-            /*double[] number = Fuzzy.FindElement(nameOfSetVar, fuzzy_numbers);
-
-            if(number.Length == 0)
+            } else
             {
-                nameOfSetVar = nameOfSetVar.Replace("(", "").Replace(")", "");
-                number = new double[nameOfSetVar.Split(";").Length];
-                for (int i = 0;i < nameOfSetVar.Split(";").Length; i++)
-                    number[i] = Double.Parse(nameOfSetVar.Split(";")[i]);
+                argumentVar = Double.Parse(argument.Text.Trim());
+                nameOfSetVar = nameOfSet.Text.Trim();
             }
 
-            double[] sortedArray = new double[number.Length];
-            Array.Copy(number, 0, sortedArray, 0, number.Length);
-            Array.Sort(sortedArray);*/
+            double[] n = Fuzzy.FindElement(nameOfSetVar, fuzzy_numbers);
+            double[] Y = Fuzzy.FindY(nameOfSetVar, fuzzy_numbers);
 
-            //(-11;-8,6;-6,39;-4,56;-3,01;-1,74;-0,7;0;6;4,7;3,07;1,12;-1,2;-3,81;-6,74;-10)
-            /*double first = sortedArray[0];
-            double center1 = number[number.Length / 2 - 1];
-            double center2 = number[number.Length / 2];
-            double end = sortedArray[number.Length - 1];
+            if(n.Length == 0 || Y.Length == 0)
+            {
+                errors3.Text = "Nieprawidłowe wartości!";
+                return;
+            }
 
-            double[] firstPart = new double[number.Length / 2];
-            double[] secondPart = new double[number.Length / 2];
-
-            Array.Copy(number, 0, firstPart, 0, number.Length / 2);
-            Array.Copy(number, 0, secondPart, 0, number.Length / 2);*/
-
-            // -------------------- sprawdzanie ------------------------
-            //if (argumentVar <= first || argumentVar > end) res.Add(0);
-            //if(argumentVar > center1 && argumentVar <= center2) res.Add(1);
-
-            // --------------------------------------------
-
-            //double[] Y = Fuzzy.FindY(nameOfSetVar, fuzzy_numbers);
-
+            //double[] n = new double[] { 4, 2.74, 1.66, 0.74, 0, -0.57, -0.98, -1.22, -1.28, -1.17, -0.9, 24, 28.35, 33, 37.95, 43.2, 48.75, 54.6, 60.75, 67.2, 73.95, 81 };
+            //double[] Y = new double[] { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0 };
 
             for (int i = 1; i < n.Length - 1; i++)
             {
@@ -374,11 +368,6 @@ namespace zadanie_rozmyte
                 }
             }
             if (res.Count == 0) res.Add(0);
-
-            /*foreach (double r in res)
-            {
-                Debug.WriteLine(r);
-            }*/
 
             if(res.Count == 0) errors3.Text = $"Wystąpił błąd podczas obliczeń!";
             else
