@@ -259,7 +259,6 @@ namespace zadanie_rozmyte
             double[] numbers2;
 
             //znajdowanie operatora
-            //(2;4;6;7)+(2;4;6;7)
             PassedNumber n1 = new PassedNumber(inputNumbers[0]);
             PassedNumber n2 = new PassedNumber(inputNumbers[1]);
 
@@ -343,27 +342,19 @@ namespace zadanie_rozmyte
                 return;
             }
 
-            //double[] n = new double[] { 4, 2.74, 1.66, 0.74, 0, -0.57, -0.98, -1.22, -1.28, -1.17, -0.9, 24, 28.35, 33, 37.95, 43.2, 48.75, 54.6, 60.75, 67.2, 73.95, 81 };
-            //double[] Y = new double[] { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0 };
-
-            for (int i = 1; i < n.Length - 1; i++)
+            for (int i = 1; i < n.Length; i++)
             {
                 if ((n[i] - n[i - 1]) != 0)
                 {
                     if (argumentVar > n[i - 1] && argumentVar <= n[i] || argumentVar <= n[i - 1] && argumentVar > n[i])
                     {
-                        double a1 = (Y[i - 1] - Y[i]);
-                        double a2 = (n[i - 1] - n[i]);
-                        double a = Math.Round(a1 / a2, 6);
+                        double a1 = Y[i - 1] - Y[i];
+                        double a2 = n[i - 1] - n[i];
+                        double a = a1 / a2;
                         double b = Y[i - 1] - (a * n[i - 1]);
-
-                        //Debug.WriteLine($"a: {a}, b: {b}");
-
                         double y = a * argumentVar + b;
-                        Debug.WriteLine($"{y}");
 
-                        double result = (argumentVar - n[i - 1]) / (n[i] - n[i - 1]);
-                        res.Add(result);
+                        res.Add(y);
                     }
                 }
             }
@@ -373,11 +364,7 @@ namespace zadanie_rozmyte
             else
             {
                 string text = "";
-                foreach (double r in res)
-                {
-                    text += $"* {r}\n";
-                    Debug.WriteLine(r);
-                }
+                foreach (double r in res) text += $"* {r}\n";
                 errors3.Text = $"Wartości przynależności wynoszą:\n{text}";
             }
         }

@@ -11,7 +11,10 @@ namespace zadanie_rozmyte
         public static bool IsElementExist(string name)
         {
             string[] readText = File.ReadAllLines("fuzzy.txt");
-            foreach (string f in readText) if (f.Split("|")[1] == name) return true;
+            foreach (string f in readText)
+            {
+                if (f.Split("|")[1] == name) return true;
+            }
             return false;
         }
         public static double[] FindElement(string name, List<Fuzzy> fuzzy_numbers)
