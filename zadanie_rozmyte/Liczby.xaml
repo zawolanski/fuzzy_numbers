@@ -5,23 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zadanie_rozmyte"
         mc:Ignorable="d"
-        Title="Liczby" Height="1066" Width="1188" Background="#FF151515">
+        Title="Liczby" Height="1016" Width="1188" Background="#FF151515">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="2" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <ScrollViewer x:Name="viewer" HorizontalAlignment="Center" Grid.Column="2" RenderTransformOrigin="0.5,0.5" Width="771" Margin="0,10,0,10" Foreground="White"  >
-            <ScrollViewer.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </ScrollViewer.RenderTransform>
-        </ScrollViewer>
+        <StackPanel x:Name="viewerBox" Grid.Column="2"/>
         <TextBlock Width="2" Background="#FF404040" Grid.ColumnSpan="2" Margin="395,40,0,10" />
         <StackPanel>
             <StackPanel Margin="0,0,0,19" >

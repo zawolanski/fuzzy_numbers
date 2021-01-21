@@ -134,6 +134,7 @@ namespace zadanie_rozmyte
         private void Init()
         {
             readText = File.ReadAllLines("fuzzy.txt");
+            fuzzy_numbers.Clear();
 
             foreach (string n in readText)
             {
@@ -144,6 +145,12 @@ namespace zadanie_rozmyte
             ColumnDefinition colDef1 = new ColumnDefinition();
             ColumnDefinition colDef2 = new ColumnDefinition();
             RowDefinition rowDef1 = new RowDefinition();
+
+            ScrollViewer viewer = new ScrollViewer();
+            viewer.HorizontalAlignment = HorizontalAlignment.Center;
+            viewer.Width = 771;
+            viewer.Height = 900;
+            viewer.Foreground = Brushes.White;
 
             Thickness margin = myGrid.Margin;
             margin.Top = 30;
@@ -170,8 +177,8 @@ namespace zadanie_rozmyte
             Grid.SetColumn(titleNumberTextBlock, 1);
             Grid.SetRow(titleNumberTextBlock, 0);
 
-            titleNameTextBlock.FontSize = 32;
-            titleNumberTextBlock.FontSize = 32;
+            titleNameTextBlock.FontSize = 28;
+            titleNumberTextBlock.FontSize = 28;
 
             myGrid.Children.Add(titleNameTextBlock);
             myGrid.Children.Add(titleNumberTextBlock);
@@ -201,7 +208,11 @@ namespace zadanie_rozmyte
                 myGrid.Children.Add(nameTextBlock);
                 myGrid.Children.Add(numberTextBlock);
             }
+
             viewer.Content = myGrid;
+
+            viewerBox.Children.Clear();
+            viewerBox.Children.Add(viewer);
         }
         public Liczby()
         {
