@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using Spire.Xls;
 using System.Diagnostics;
+using Syncfusion.UI.Xaml.Charts;
 
 namespace zadanie_rozmyte
 {
@@ -109,6 +110,24 @@ namespace zadanie_rozmyte
                 Init();
             }
 
+            Points points = new Points();
+
+            for(int i = 0; i < upsAdd.Count; i++)
+            {
+                points.Add(upsAdd[i], Y[i]);
+                Debug.WriteLine(upsAdd[i] + " | " + Y[i]);
+            }
+
+            LineSeries series = new LineSeries()
+            {
+                ItemsSource = points.Data,
+                XBindingPath = "X",
+                YBindingPath = "Y",
+                Interior = new SolidColorBrush(Color.FromRgb(0xEB, 0x00, 0x00))
+            };
+
+            chart.Series.Add(series);
+
             SaveToExcel(upsAdd, Y);
             result += ")";
             return result;
@@ -148,15 +167,15 @@ namespace zadanie_rozmyte
 
             ScrollViewer viewer = new ScrollViewer();
             viewer.HorizontalAlignment = HorizontalAlignment.Center;
-            viewer.Width = 771;
-            viewer.Height = 900;
-            viewer.Foreground = Brushes.White;
+            viewer.Width = 770;
+            viewer.Height = 500;
+            viewer.Foreground = Brushes.Black;
 
             Thickness margin = myGrid.Margin;
-            margin.Top = 30;
+            margin.Top = 10;
             myGrid.Margin = margin;
 
-            myGrid.Width = 730;
+            myGrid.Width = 700;
             myGrid.ShowGridLines = true;
 
             myGrid.HorizontalAlignment = HorizontalAlignment.Right;
